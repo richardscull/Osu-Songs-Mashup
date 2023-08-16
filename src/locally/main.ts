@@ -5,10 +5,25 @@ import { StandardRuleset } from "osu-standard-stable";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import ffprobe from "@ffprobe-installer/ffprobe";
+import getLocalizationJson from "../lib/localization/main";
+import Jsoning from "jsoning";
+import { setUserSongsFolder } from "./prompts";
 const MP3Cutter = require("mp3-cutter");
 
-async function main() {
-  const userMapFolder = getUsersMapFolder();
+// TODO list:
+// - [ ] Refactor code
+// - [ ] Add support of filters
+// - [ ] Add support of user input
+// - [ ] Make search faster
+
+export default async function main(config: Jsoning) {
+  while (!config.get("path")) await setUserSongsFolder(config);
+
+  generate(config.get("path"));
+}
+
+async function generate(path: string) {
+  const userMapFolder = path;
   const maps = fs.readdirSync(userMapFolder) as string[];
 
   const mapsPath = maps
@@ -52,7 +67,7 @@ async function main() {
 
   if (firstSong.diffPath === secondSong.diffPath) {
     console.log("Same song, trying again");
-    main();
+    generate(path);
     return;
   }
 
@@ -136,8 +151,6 @@ async function main() {
 
   console.log(`You can find your map as "${firstSongParsed.metadata.title}"`);
 }
-
-main();
 
 async function mergeAudioFiles(
   firstSongPath: string,
@@ -228,17 +241,6 @@ async function mergeHitObjects(
   ];
 
   return { hitObjects, lastFirstSongTiming, firstSecondSongTiming };
-}
-
-function getUsersMapFolder() {
-  const args = process.argv.slice(2);
-
-  if (args.length === 0) {
-    console.log("Usage: node main.js <path to maps folder>");
-    process.exit(1);
-  } else {
-    return args[0];
-  }
 }
 
 async function getDifficulty(

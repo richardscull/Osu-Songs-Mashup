@@ -1,0 +1,40 @@
+{
+  "menuOptions": {
+    "chooseOption": "Choose an Option",
+    "mashupLocally": "Local Mashup",
+    "mashupWithChimuMoe": "Chimu.moe Mashup",
+    "mashupWithOsuApi": "osu!api Mashup",
+    "changeSettings": "Change Settings",
+    "backToMenu": "Back to Menu",
+    "exit": "Exit",
+    "areYouSureMethod": "Are you sure you want to proceed with this method?"
+  },
+  "mashupMethods": {
+    "localMashup": {
+      "name": "📂 Local Mashup",
+      "description": "\nUse this method to create mashups from maps stored on your PC.\nEnjoy random mashups with filtering or create a mashup of two songs of your choice.\n\n❗ Recommended if you have a library of at least 10,000 songs."
+    },
+    "chimuMoeMashup": {
+      "name": "Chimu.moe Mashup",
+      "description": "Use Chimu.moe to create exciting mashups. Discover new combinations using this method."
+    },
+    "osuApiMashup": {
+      "name": "osu!api Mashup",
+      "description": "Create mashups using the osu!api. Combine your favorite tracks and enjoy the music fusion."
+    }
+  },
+  "settings": {
+    "seeCurrentSettings": "View Current Settings",
+    "changeLocalization": "Change Localization",
+    "changeLocalSettings": "Change Local Mashup Settings",
+    "changeChimuMoeSettings": "Change Chimu.moe Settings",
+    "changeOsuApiSettings": "Change osu!api Settings",
+    "setOsuPath": "Set your osu! path. Example: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\",
+    "wrongPath": "Wrong path! Please try again.",
+    "correctPath": "Path changed successfully!"
+  },
+  "messages": {
+    "exitMessage": "Goodbye! 👋",
+    "confirmMethod": "Are you sure you want to proceed with this method?"
+  }
+}
