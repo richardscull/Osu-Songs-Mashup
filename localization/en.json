@@ -7,7 +7,9 @@
     "changeSettings": "Change Settings",
     "backToMenu": "Back to Menu",
     "exit": "Exit",
-    "areYouSureMethod": "Are you sure you want to proceed with this method?"
+    "areYouSureMethod": "Are you sure you want to proceed with this method?",
+    "randomMashupFilters": "Random Mashup with Filters",
+    "chooseMashupMaps": "Choose Maps To Mashup"
   },
   "mashupMethods": {
     "localMashup": {
@@ -30,6 +32,10 @@
     "changeChimuMoeSettings": "Change Chimu.moe Settings",
     "changeOsuApiSettings": "Change osu!api Settings",
     "setOsuPath": "Set your osu! path. Example: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\",
+    "setFirstMapPath": "Set your first desired map path. Example: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\1094694 Hirose Kohmi - promise",
+    "setSecondMapPath": "Set your second desired map path. Example: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\1094694 Hirose Kohmi - promise",
+    "noDifficulties": "No difficulties found for this map.",
+    "chooseDifficulty": "Choose a difficulty",
     "wrongPath": "Wrong path! Please try again.",
     "correctPath": "Path changed successfully!"
   },

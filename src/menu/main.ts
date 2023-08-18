@@ -1,11 +1,11 @@
-import printWatermark from "../lib/watermark";
+import printWatermarkAndClear from "../lib/watermark";
 import Jsoning from "jsoning";
 import inquirer from "inquirer";
 import getLocalizationJson, { setLocalization } from "../lib/localization/main";
 import { showLocallyExplanation } from "../locally/prompts";
 
 export default (async () => {
-  await printWatermark();
+  await printWatermarkAndClear(true);
 
   const config = new Jsoning("config.json");
   if (!config.get("localization")) await setLocalization(config); // Ask user to choose localization
@@ -16,8 +16,9 @@ export default (async () => {
 export async function showMainMenu(config: Jsoning) {
   const localization = await getLocalizationJson(config);
   const localizationMenu = localization.get("menuOptions");
+  const localizationMessages = localization.get("messages");
 
-  console.log(); // Blank line
+  printWatermarkAndClear();
 
   inquirer
     .prompt([
@@ -53,7 +54,7 @@ export async function showMainMenu(config: Jsoning) {
           require("./settings").default(config);
           break;
         case localizationMenu.exit:
-          console.log(localization.get("messages").exitMessage);
+          console.log(localizationMessages.exitMessage);
           process.exit(0);
       }
     });

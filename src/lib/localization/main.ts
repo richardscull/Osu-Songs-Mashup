@@ -1,5 +1,6 @@
 import inquirer from "inquirer";
 import Jsoning from "jsoning";
+import printWatermarkAndClear from "../watermark";
 
 export default async function getLocalizationJson(config: Jsoning) {
   const localization = await config.get("localization");
@@ -8,7 +9,8 @@ export default async function getLocalizationJson(config: Jsoning) {
 }
 
 export async function setLocalization(config: Jsoning) {
-  console.log(); // Blank line
+  printWatermarkAndClear();
+
   await inquirer
     .prompt([
       {

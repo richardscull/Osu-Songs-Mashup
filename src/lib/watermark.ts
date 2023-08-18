@@ -1,4 +1,4 @@
-export default async function printWatermark() {
+export default async function printWatermarkAndClear(firstRun?: boolean) {
   const asciiArt = [
     "              ⢸⣿⡿⠷⠄⠿⠿⠿⠟⠓⠰⠘⠿⣿⣿⡈⣿⡇⢹⡟⠰⠦⠁⠈⠉⠋⠄⠻⢿⣿",
     "              ⢨⡑⠶⡏⠛⠐⠋⠓⠲⠶⣭⣤⣴⣦⣭⣥⣮⣾⣬⣴⡮⠝⠒⠂⠂⠘⠉⠿⠖⣬",
@@ -10,8 +10,10 @@ export default async function printWatermark() {
     "",
   ];
 
+  console.clear();
+
   for (const line of asciiArt) {
     console.log(line);
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    if (firstRun) await new Promise((resolve) => setTimeout(resolve, 100));
   }
 }

@@ -7,7 +7,9 @@
     "changeSettings": "Изменить настройки",
     "backToMenu": "Вернуться в меню",
     "exit": "Выйти",
-    "areYouSureMethod": "Вы уверены, что хотите продолжить с этим методом?"
+    "areYouSureMethod": "Вы уверены, что хотите продолжить с этим методом?",
+    "randomMashupFilters": "Случайный мешап с фильтрацией",
+    "chooseMashupMaps": "Выбрать две карты для мешапа"
   },
   "mashupMethods": {
     "localMashup": {
@@ -30,6 +32,10 @@
     "changeChimuMoeSettings": "Изменить настройки Chimu.moe",
     "changeOsuApiSettings": "Изменить настройки osu!api",
     "setOsuPath": "Введите ваш путь к osu! директории. Пример: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\",
+    "setFirstMapPath": "Введите ваш путь к первой желаемой карте. Пример: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\1094694 Hirose Kohmi - promise",
+    "setSecondMapPath": "Введите ваш путь ко второй желаемой карте. Пример: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\1094694 Hirose Kohmi - promise",
+    "noDifficulties": "Нет доступных сложностей для этой карты.",
+    "chooseDifficulty": "Выберите сложность",
     "wrongPath": "Неверный путь! Пожалуйста, попробуйте еще раз.",
     "correctPath": "Путь успешно установлен!"
   },

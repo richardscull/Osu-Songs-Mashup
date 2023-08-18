@@ -2,13 +2,14 @@ import Jsoning from "jsoning";
 import getLocalizationJson, { setLocalization } from "../lib/localization/main";
 import inquirer from "inquirer";
 import { showMainMenu } from "./main";
+import printWatermarkAndClear from "../lib/watermark";
 
 export default async function settings(config: Jsoning) {
   const localization = await getLocalizationJson(config);
   const localizationMenu = await localization.get("menuOptions");
   const localizationSettings = await localization.get("settings");
 
-  console.log(); // Blank line
+  printWatermarkAndClear();
 
   inquirer
     .prompt([
