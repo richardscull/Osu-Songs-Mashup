@@ -9,7 +9,11 @@
     "exit": "Exit",
     "areYouSureMethod": "Are you sure you want to proceed with this method?",
     "randomMashupFilters": "Random Mashup with Filters",
-    "chooseMashupMaps": "Choose Maps To Mashup"
+    "chooseMashupMaps": "Choose Maps To Mashup",
+    "thisMethodIsNotAvailable": "This method is not available yet.",
+    "twoRandomMaps": "Two Random Maps:",
+    "areYouSureMaps": "Are you sure you want to proceed with these maps?",
+    "couldNotFindMaps": "Could not find any maps with the given filters. Please try again."
   },
   "mashupMethods": {
     "localMashup": {
@@ -32,8 +36,8 @@
     "changeChimuMoeSettings": "Change Chimu.moe Settings",
     "changeOsuApiSettings": "Change osu!api Settings",
     "setOsuPath": "Set your osu! path. Example: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\",
-    "setFirstMapPath": "Set your first desired map path. Example: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\1094694 Hirose Kohmi - promise",
-    "setSecondMapPath": "Set your second desired map path. Example: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\1094694 Hirose Kohmi - promise",
+    "setFirstMapPath": "Set your first desired map path. Example: C:\\osu!\\Songs\\1094694 Hirose Kohmi - promise\\",
+    "setSecondMapPath": "Set your second desired map path. Example: C:\\osu!\\Songs\\1529141 Ata - I'm Not Crazy\\",
     "noDifficulties": "No difficulties found for this map.",
     "chooseDifficulty": "Choose a difficulty",
     "wrongPath": "Wrong path! Please try again.",
@@ -42,5 +46,16 @@
   "messages": {
     "exitMessage": "Goodbye! 👋",
     "confirmMethod": "Are you sure you want to proceed with this method?"
+  },
+  "merging": {
+    "started": "Merging started...",
+    "metadata": "Merging metadata...",
+    "difficulties": "Merging difficulties...",
+    "audio": "Merging audio...",
+    "background": "Merging background...",
+    "completed": "Merging completed!",
+    "exportedAs": "Exported as",
+    "openOsz": "Do you want to open exported map?",
+    "error": "An error occurred while merging the maps."
   }
 }
