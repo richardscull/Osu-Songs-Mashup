@@ -12,7 +12,7 @@ export async function openOsz(config: Jsoning, oszPath: string) {
       {
         name: "backToMenu",
         type: "confirm",
-        message: localizationMerging.openOsz + "?",
+        message: localizationMerging.openOsz,
       },
     ])
     .then((options) => {

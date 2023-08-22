@@ -11,6 +11,7 @@ import { zip } from "zip-a-folder";
 import path from "path";
 import { openOsz } from "./propmpts";
 import { showMainMenu } from "../menu/main";
+import { MergeBackgroundsAndExport } from "./background";
 
 export default async function main(
   config: Jsoning,
@@ -79,11 +80,11 @@ export default async function main(
   console.log(localizationMerging.background);
 
   // Merge background images (for now it's just copy first map background)
-  if (FirstSong.difficulty.events.backgroundPath)
-    fs.copyFileSync(
-      `${FirstSong.path}/${FirstSong.difficulty.events.backgroundPath}`,
-      `./Temp/${MergedSong.metadata.title}/merged.jpg`
-    );
+  await MergeBackgroundsAndExport(
+    FirstSong,
+    SecondSong,
+    MergedSong.metadata.title
+  );
 
   // Encode merged map to file
   const encoder = new BeatmapEncoder();
