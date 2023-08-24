@@ -103,9 +103,10 @@ async function getMostComfortMap(mapPaths: string[]) {
 
                   if (
                     candidateStarRate > mapOfChoiceStarRating - 1 &&
-                    candidateStarRate < mapOfChoiceStarRating + 1 &&
-                    beatmapLocal.bpm > mapOfChoice.bpm - 20 &&
-                    beatmapLocal.bpm < mapOfChoice.bpm + 20
+                    candidateStarRate < mapOfChoiceStarRating + 1
+                    // Disabled, because we have auto adjusted bpm now
+                    //   beatmapLocal.bpm > mapOfChoice.bpm - 20 &&
+                    //   beatmapLocal.bpm < mapOfChoice.bpm + 20
                   ) {
                     workerResults.push(map, mapLocal);
                     result = true;

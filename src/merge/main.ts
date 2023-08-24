@@ -1,7 +1,7 @@
 import { BeatmapDecoder, BeatmapEncoder } from "osu-parsers";
 import { Difficulty } from "../locally/types";
 import fs from "fs";
-import { ControlPointGroup, HitObject } from "osu-classes";
+import { ControlPointGroup, HitObject, IHasDuration } from "osu-classes";
 import printWatermarkAndClear from "../lib/watermark";
 import Jsoning from "jsoning";
 import getLocalizationJson from "../lib/localization/main";
@@ -26,9 +26,7 @@ export default async function main(
   // Start merging
   console.log(localizationMerging.started);
 
-  const MergedSong = new BeatmapDecoder().decodeFromString(
-    new BeatmapEncoder().encodeToString(FirstSong.difficulty)
-  );
+  const MergedSong = FirstSong.difficulty.clone();
 
   // Merge maps metadata
   console.log(localizationMerging.metadata);
@@ -46,19 +44,26 @@ export default async function main(
     HitObjectHalfs.FirstHalf[HitObjectHalfs.FirstHalf.length - 1].startTime;
   const startOfSecondHalf = HitObjectHalfs.SecondHalf[0].startTime;
 
-  // Merge hitObjects
   console.log(localizationMerging.difficulties);
 
+  // Merge hitObjects
   MergedSong.hitObjects = [
     ...HitObjectHalfs.FirstHalf.slice(0, HitObjectHalfs.FirstHalf.length - 1),
-    ...HitObjectHalfs.SecondHalf.map((hitObject) => {
+    ...HitObjectHalfs.SecondHalf.map((obj) => {
+      const hitObject = obj as HitObject & IHasDuration;
+      if ((hitObject.hitType as any) == 12 /* Spinner */) {
+        hitObject.endTime += endOfFirstHalf - startOfSecondHalf;
+      }
       hitObject.startTime += endOfFirstHalf - startOfSecondHalf;
       return hitObject;
     }),
-  ];
+  ] as HitObject[] & IHasDuration[];
 
   // Merge controlPoints
   MergedSong.controlPoints.groups = mergeControlPointsGroups();
+
+  // Merge breaks
+  MergedSong.events.breaks = mergeBreaks();
 
   // Create Temp folder for temporary files
   if (!fs.existsSync("./Temp")) fs.mkdirSync("./Temp");
@@ -76,6 +81,9 @@ export default async function main(
     { endOfFirstHalf, startOfSecondHalf },
     MergedSong.metadata.title
   );
+
+  // Add second timing point (to get BPM for second half)
+  addSecondTimingPoint();
 
   console.log(localizationMerging.background);
 
@@ -118,14 +126,59 @@ export default async function main(
       (point) => point.startTime < endOfFirstHalf
     );
     const secondHalf = SecondSong.difficulty.controlPoints.groups
+      .filter((point) => point.startTime >= startOfSecondHalf)
+      .map((point) => {
+        point.startTime += endOfFirstHalf - startOfSecondHalf;
+        return point;
+      });
+    const controlPointsGroups = [...firstHalf, ...secondHalf];
+
+    return controlPointsGroups;
+  }
+
+  // Function to add second timing point (to get BPM for second half)
+  function addSecondTimingPoint() {
+    const lastTimingPoint = SecondSong.difficulty.controlPoints.timingPoints
+      .filter(
+        (p) => p.startTime < HitObjectHalfs.SecondHalf.slice(-1)[0].startTime
+      )
+      .slice(-1)[0];
+
+    const mergeOffset = endOfFirstHalf - startOfSecondHalf;
+
+    const timeForFullRythmCycle =
+      lastTimingPoint.beatLength * lastTimingPoint.timeSignature;
+
+    const mapsOffset =
+      lastTimingPoint.startTime < 0
+        ? timeForFullRythmCycle - lastTimingPoint.startTime
+        : lastTimingPoint.startTime;
+
+    let newOffset = mergeOffset + mapsOffset;
+
+    for (
+      ;
+      newOffset + timeForFullRythmCycle < startOfSecondHalf + mergeOffset;
+      newOffset += timeForFullRythmCycle
+    )
+      continue;
+
+    MergedSong.controlPoints.add(lastTimingPoint, newOffset);
+  }
+
+  function mergeBreaks() {
+    const firstHalf = FirstSong.difficulty.events.breaks.filter(
+      (point) => point.endTime < endOfFirstHalf
+    );
+    const secondHalf = SecondSong.difficulty.events.breaks
       .filter((point) => point.startTime > startOfSecondHalf)
       .map((point) => {
         point.startTime += endOfFirstHalf - startOfSecondHalf;
         return point;
       });
 
-    const controlPointsGroups = [...firstHalf, ...secondHalf];
-    return controlPointsGroups;
+    const breaks = [...firstHalf, ...secondHalf];
+    return breaks;
   }
 
   // Function to merge hitObject halfs
@@ -133,11 +186,11 @@ export default async function main(
     const FirstHalf = FirstSong.difficulty.hitObjects.slice(
       0,
       Math.floor(FirstSong.difficulty.hitObjects.length / 2)
-    );
+    ) as HitObject[] & IHasDuration[];
 
     const SecondHalf = SecondSong.difficulty.hitObjects.slice(
       Math.floor(SecondSong.difficulty.hitObjects.length / 2)
-    );
+    ) as HitObject[] & IHasDuration[];
 
     return { FirstHalf, SecondHalf };
   }
