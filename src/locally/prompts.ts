@@ -130,12 +130,16 @@ export async function userChooseMap(
       },
     ])
     .then(async (path) => {
-      if (!fs.existsSync(path.Path)) {
+      const filteredPath = path.Path.replace(/[*?"<>|]/g, "");
+      if (
+        !fs.existsSync(filteredPath) ||
+        !fs.lstatSync(filteredPath).isDirectory()
+      ) {
         console.log(localizationSettings.wrongPath);
         return await backToMenu(config, userChooseMap, number);
       } else {
         const difficulties = fs
-          .readdirSync(path.Path, "utf8")
+          .readdirSync(filteredPath, "utf8")
           .filter((file) => file.endsWith(".osu"));
 
         if (difficulties.length === 0) {
@@ -148,7 +152,7 @@ export async function userChooseMap(
           await Promise.all(
             difficulties.map(async (difficulty) => {
               const beatmap = await decoder.decodeFromPath(
-                `${path.Path}/${difficulty}`,
+                `${filteredPath}/${difficulty}`,
                 false
               );
               if (beatmap.mode === 0) {
@@ -162,7 +166,7 @@ export async function userChooseMap(
             return await backToMenu(config, userChooseMap, number);
           } else {
             return {
-              path: path.Path,
+              path: filteredPath,
               difficulty: await userChooseDifficulty(
                 config,
                 difficultyBeatmaps
