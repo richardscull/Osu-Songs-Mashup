@@ -156,12 +156,8 @@ export default async function main(
 
     let newOffset = mergeOffset + mapsOffset;
 
-    for (
-      ;
-      newOffset + timeForFullRythmCycle < startOfSecondHalf + mergeOffset;
-      newOffset += timeForFullRythmCycle
-    )
-      continue;
+    while (newOffset + timeForFullRythmCycle < startOfSecondHalf + mergeOffset)
+      newOffset += timeForFullRythmCycle;
 
     MergedSong.controlPoints.add(lastTimingPoint, newOffset);
   }
