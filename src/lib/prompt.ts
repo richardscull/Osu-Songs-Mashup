@@ -11,8 +11,6 @@ export default async function MethodNotAvailable(
   const localization = await getLocalizationJson(config);
   const localizationMenu = await localization.get("menuOptions");
 
-  console.log(localizationMenu.thisMethodIsNotAvailable);
-
   await inquirer
     .prompt([
       {

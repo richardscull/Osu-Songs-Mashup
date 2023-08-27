@@ -86,7 +86,7 @@ async function getRandomMapsAndMerge(config: Jsoning) {
 
   if (difficulties.length === 0) {
     console.log(localizationMenu.couldNotFindMaps);
-    return require("../lib/backToMenu").default(config, main);
+    return require("../lib/prompt").default(config, main);
   }
 
   // NOTE: Maybe should use this function for userChooseMap too?

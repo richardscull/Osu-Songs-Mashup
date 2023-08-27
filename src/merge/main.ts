@@ -13,6 +13,9 @@ import { openOsz } from "./propmpts";
 import { showMainMenu } from "../menu/main";
 import { MergeBackgroundsAndExport } from "./background";
 
+// TODO:
+// - [ ] Fix Kiai continues in second half
+
 export default async function main(
   config: Jsoning,
   FirstSong: Difficulty,

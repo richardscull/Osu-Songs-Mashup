@@ -5,6 +5,7 @@ import { Beatmap } from "osu-classes";
 import fs from "fs";
 import { BeatmapDecoder } from "osu-parsers";
 import { StandardRuleset } from "osu-standard-stable";
+import { metaSource } from "../merge/metadata";
 
 export function getTwoComfortMaps(paths: string[]): Promise<string[]> {
   cluster.setupPrimary({
@@ -61,7 +62,8 @@ if (!cluster.isPrimary) {
   process.on("message", async (mapPaths: string[]) => {
     const workerResults = await getMostComfortMap(mapPaths);
 
-    if (process && process.send) process.send(workerResults);
+    if (process && process.send && process.connected)
+      process.send(workerResults);
   });
 }
 
@@ -85,10 +87,10 @@ async function getMostComfortMap(mapPaths: string[]) {
 
     await Promise.all([
       decoder.decodeFromPath(`${map}`, false).then(async (beatmap: Beatmap) => {
-        if (beatmap.mode === 0) {
+        if (beatmap.mode === 0 && beatmap.metadata.tags[0] !== metaSource) {
           const mapOfChoice = beatmap;
           const mapOfChoiceStarRating = ruleset
-            .createDifficultyCalculator(beatmap)
+            .createDifficultyCalculator(mapOfChoice)
             .calculate().starRating;
           for (let i = 1; i < 10 && !result; i++) {
             const randLocal = Math.floor(Math.random() * mapPaths.length);
@@ -103,7 +105,8 @@ async function getMostComfortMap(mapPaths: string[]) {
 
                   if (
                     candidateStarRate > mapOfChoiceStarRating - 1 &&
-                    candidateStarRate < mapOfChoiceStarRating + 1
+                    candidateStarRate < mapOfChoiceStarRating + 1 &&
+                    beatmapLocal.metadata.tags[0] !== metaSource
                     // Disabled, because we have auto adjusted bpm now
                     //   beatmapLocal.bpm > mapOfChoice.bpm - 20 &&
                     //   beatmapLocal.bpm < mapOfChoice.bpm + 20
