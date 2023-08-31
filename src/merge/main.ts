@@ -1,7 +1,12 @@
 import { BeatmapDecoder, BeatmapEncoder } from "osu-parsers";
 import { Difficulty } from "../locally/types";
 import fs from "fs";
-import { ControlPointGroup, HitObject, IHasDuration } from "osu-classes";
+import {
+  BeatmapBreakEvent,
+  ControlPointGroup,
+  HitObject,
+  IHasDuration,
+} from "osu-classes";
 import printWatermarkAndClear from "../lib/watermark";
 import Jsoning from "jsoning";
 import getLocalizationJson from "../lib/localization/main";
@@ -68,6 +73,9 @@ export default async function main(
   // Merge breaks
   MergedSong.events.breaks = mergeBreaks();
 
+  // Add second timing point (to get BPM for second half)
+  addSecondTimingPoint();
+
   // Create Temp folder for temporary files
   if (!fs.existsSync("./Temp")) fs.mkdirSync("./Temp");
 
@@ -84,9 +92,6 @@ export default async function main(
     { endOfFirstHalf, startOfSecondHalf },
     MergedSong.metadata.title
   );
-
-  // Add second timing point (to get BPM for second half)
-  addSecondTimingPoint();
 
   console.log(localizationMerging.background);
 
@@ -130,8 +135,10 @@ export default async function main(
     );
     const secondHalf = SecondSong.difficulty.controlPoints.groups
       .filter((point) => point.startTime >= startOfSecondHalf)
-      .map((point) => {
+      .map((obj) => {
+        const point = obj as ControlPointGroup & IHasDuration;
         point.startTime += endOfFirstHalf - startOfSecondHalf;
+        point.endTime += endOfFirstHalf - startOfSecondHalf;
         return point;
       });
     const controlPointsGroups = [...firstHalf, ...secondHalf];
@@ -171,8 +178,10 @@ export default async function main(
     );
     const secondHalf = SecondSong.difficulty.events.breaks
       .filter((point) => point.startTime > startOfSecondHalf)
-      .map((point) => {
+      .map((obj) => {
+        const point = obj as BeatmapBreakEvent & IHasDuration;
         point.startTime += endOfFirstHalf - startOfSecondHalf;
+        point.endTime += endOfFirstHalf - startOfSecondHalf;
         return point;
       });
 
