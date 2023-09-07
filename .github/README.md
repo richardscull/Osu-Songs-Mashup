@@ -1,6 +1,5 @@
 <div align="center"> 
-<img src="./wwparasi.png" alt="img">
-<div align="right"><em><a href="https://twitter.com/wwparasi/status/1488257992827015172">Image by wwparasi</a></em></div>
+<a href="https://twitter.com/wwparasi/status/1488257992827015172"><img src="./wwparasi.png"></a>
 <h1>📖 osu! Songs Mashup </h1>
 </div>
 
