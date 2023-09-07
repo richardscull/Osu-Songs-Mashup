@@ -115,6 +115,9 @@ export default async function main(
     `./${MergedSong.metadata.title}.osz`
   );
 
+  // Deny modify permissions for .osz file (to prevent osu! from deleting it)
+  fs.chmodSync(`./${MergedSong.metadata.title}.osz`, 0o444);
+
   // Delete Temp folder
   fs.rmSync("./Temp", { recursive: true });
 

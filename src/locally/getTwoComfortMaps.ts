@@ -45,17 +45,17 @@ export function getTwoComfortMaps(paths: string[]): Promise<string[]> {
 
       let completedWorkers = 0;
       const beatmapsFound = [] as string[];
-      cluster.on("message", (worker, result) => {
-        if (result.length > 0) {
-          beatmapsFound.push(...result);
-
-          if (beatmapsFound.length < 2) {
+      cluster.on("message", (_, result) => {
+        if (result.length > 0)
+          if (beatmapsFound.length < 1) {
+            beatmapsFound.push(...result);
+          } else if (beatmapsFound.length < 2) {
+            beatmapsFound.push(...result);
             resolve(beatmapsFound);
             for (var id in cluster.workers) {
               cluster.workers[id]?.kill();
             }
           }
-        }
 
         if (++completedWorkers === numCPUs) {
           cluster.disconnect();
