@@ -7,7 +7,7 @@
 
 With its user-friendly filter functionality, you can create your mashups to match your skill level and musical tastes.
 
-Make your osu! experience more intresting and give this tool a try!
+Make your osu! experience more interesting and give this tool a try!
 
 ## Installation
 
