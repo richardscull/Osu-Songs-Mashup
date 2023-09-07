@@ -16,13 +16,13 @@ export async function setSettings(config: Jsoning, name: "local" | "chimu") {
   const localizationMenu = await localization.get("menuOptions");
 
   const InquirerChoices = [
-    localizationSetSettings.changeFilters,
-    localizationSetSettings.changeFilterState,
-    localizationSetSettings.backToSettings,
+    localizationSetSettings.changeFilters + " 🔧",
+    localizationSetSettings.changeFilterState + " ⚙️",
+    localizationSetSettings.backToSettings + " ↩️",
   ];
 
   if (name === "local")
-    InquirerChoices.unshift(localizationSetSettings.changeSongsPath);
+    InquirerChoices.unshift(localizationSetSettings.changeSongsPath + " 📂");
 
   printWatermarkAndClear();
 
@@ -36,7 +36,7 @@ export async function setSettings(config: Jsoning, name: "local" | "chimu") {
       },
     ])
     .then(async (options) => {
-      switch (options.settingsOptions) {
+      switch (options.settingsOptions.slice(0, -3)) {
         case localizationSetSettings.changeSongsPath:
           await setUserSongsFolder(config);
           await setSettings(config, name);

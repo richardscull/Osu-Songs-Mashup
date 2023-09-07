@@ -8,12 +8,6 @@ import { userChooseMap, userConfirmTwoMaps } from "./prompts";
 import fs from "fs";
 import { setUserSongsFolder } from "../menu/setSettings";
 
-// TODO list:
-// - [x] Refactor code
-// - [x] Add support of filters
-// - [x] Add support of user input
-// - [x] Make search faster
-
 export default async function main(config: Jsoning) {
   while (!config.get("path")) await setUserSongsFolder(config);
 
@@ -33,14 +27,14 @@ export default async function main(config: Jsoning) {
         type: "list",
         message: localizationMenu.chooseOption,
         choices: [
-          localizationMenu.randomMashupFilters,
-          localizationMenu.chooseMashupMaps,
-          localizationMenu.backToMenu,
+          localizationMenu.randomMashupFilters + " 🎲",
+          localizationMenu.chooseMashupMaps + " 🔍",
+          localizationMenu.backToMenu + " ↩️",
         ],
       },
     ])
     .then(async (options) => {
-      switch (options.option) {
+      switch (options.option.slice(0, -3)) {
         case localizationMenu.randomMashupFilters:
           await getRandomMapsAndMerge(config);
           break;
