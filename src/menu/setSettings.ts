@@ -3,10 +3,12 @@ import getLocalizationJson from "../lib/localization/main";
 import printWatermarkAndClear from "../lib/watermark";
 import fs from "fs";
 import inquirer from "inquirer";
+import { setFilters } from "./setFilters";
 
 // TODO:
-// - [ ] Set filters for local and chimu.moe
-// - [ ] Don't forget to inform that local filters has a lee-way.
+// - [x] Set filter for local
+// - [ ] Set filter for chimu.moe
+// - [x] Don't forget to inform that local filters has a lee-way.
 
 export async function setSettings(config: Jsoning, name: "local" | "chimu") {
   const localization = await getLocalizationJson(config);
@@ -40,7 +42,7 @@ export async function setSettings(config: Jsoning, name: "local" | "chimu") {
           await setSettings(config, name);
           break;
         case localizationSetSettings.changeFilters:
-          console.log("Unsupported");
+          await setFilters(config, name);
           break;
         case localizationSetSettings.changeFilterState:
           await changeFilterState(config, name);

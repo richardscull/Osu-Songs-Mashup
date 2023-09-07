@@ -21,7 +21,7 @@
       "description": "\nUse this method to create mashups from maps stored on your PC.\nEnjoy random mashups with filtering or create a mashup of two songs of your choice.\n\n❗ Recommended if you have a library of at least 10,000 songs."
     },
     "chimuMoeMashup": {
-      "name": "Chimu.moe Mashup",
+      "name": "❤️ Chimu.moe Mashup",
       "description": "Use Chimu.moe to create exciting mashups. Discover new combinations using this method."
     },
     "osuApiMashup": {
@@ -57,9 +57,12 @@
   "filter": {
     "filterState": "Filter State",
     "starRating": "Star Rating",
-    "BPM": "BPM",
+    "bpm": "BPM",
     "length": "Length",
-    "additionalInput": "Additional Input"
+    "query": "Additional Input",
+    "notSet": "Not Set",
+    "localFilterLeeway": "⚠️  Keep in mind that local filters have a some leeway to optimise the search.",
+    "enterNewValue": "Enter a new value for this filter (or leave empty to disable it):"
   },
   "messages": {
     "exitMessage": "Goodbye! 👋",

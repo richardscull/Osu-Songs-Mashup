@@ -26,7 +26,7 @@ export default async function toSettings(config: Jsoning) {
           changeWord +
             localizationSettings.chimuMoeSettings.toLowerCase() +
             " ❤️",
-          localizationMenu.backToMenu + " 🚪",
+          localizationMenu.backToMenu + " ↩️",
         ],
       },
     ])
@@ -117,26 +117,3 @@ async function showFilters(config: Jsoning, name: "local" | "chimu") {
 
   console.log(); // New line
 }
-
-/**
- * ⚙️ Current settings:
- * - Localization: English
- *
- * 📂 Local settings:
- * - Local songs path: C:\Users\user\Documents\osu!\Songs
- * - Filters:
- * No filters applied.
- * (or)
- * Star rating: 4 - 5
- * BPM: 120 - 180
- * Length: 1:30 - 2:30
- *
- * ❤️  Chimu.moe settings:
- * - Filters:
- * No filters applied.
- * (or)
- * Star rating: 4 - 5
- * BPM: 120 - 180
- * Length: 1:30 - 2:30
- * Genre: Anime
- */

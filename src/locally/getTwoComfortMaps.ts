@@ -112,8 +112,9 @@ function isBeatmapValid(map: Beatmap, filter?: Filter): boolean {
   if (filter) {
     const ruleset = new StandardRuleset();
 
+    if (filter.useFilter === false) return true;
+
     // +20, +30 and etc. are giving filter a bit of a leeway
-    if (filter.useFilter !== true) return false;
     if (filter.bpm && (map.bpm + 20 < filter.bpm || map.bpm - 20 > filter.bpm))
       return false;
 
@@ -127,9 +128,11 @@ function isBeatmapValid(map: Beatmap, filter?: Filter): boolean {
       )
         return false;
     }
+
     if (
       filter.length &&
-      (map.length + 30 < filter.length || map.length - 30 > filter.length)
+      (map.length / 1000 + 30 < filter.length ||
+        map.length / 1000 - 30 > filter.length)
     )
       return false;
   }

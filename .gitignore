@@ -1,8 +1,9 @@
 Temp
 Export
+
+.vscode
 build
 node_modules
-.vscode
-TODO.md 
+
 config.json
 *.osz

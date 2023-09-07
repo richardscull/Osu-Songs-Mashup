@@ -27,15 +27,15 @@ export async function showMainMenu(config: Jsoning) {
         type: "list",
         message: localizationMenu.chooseOption,
         choices: [
-          localizationMenu.mashupLocally,
-          localizationMenu.mashupWithChimuMoe,
-          localizationMenu.changeSettings,
-          localizationMenu.exit,
+          localizationMenu.mashupLocally + " 📂",
+          localizationMenu.mashupWithChimuMoe + " ❤️",
+          localizationMenu.changeSettings + " ⚙️",
+          localizationMenu.exit + " 🚪",
         ],
       },
     ])
     .then((options) => {
-      switch (options.menuOptions) {
+      switch (options.menuOptions.slice(0, -3)) {
         case localizationMenu.mashupLocally:
           showLocallyExplanation(config);
           break;
