@@ -53,6 +53,7 @@ export function getTwoComfortMaps(paths: string[]): Promise<string[]> {
             beatmapsFound.push(...result);
             resolve(beatmapsFound);
             for (var id in cluster.workers) {
+              if (cluster.worker && cluster.workers[id]) continue;
               cluster.workers[id]?.kill();
             }
           }
@@ -69,7 +70,6 @@ export function getTwoComfortMaps(paths: string[]): Promise<string[]> {
 if (!cluster.isPrimary) {
   process.on("message", async (mapPaths: string[]) => {
     const workerResults = await getMostComfortMap(mapPaths);
-
     if (process && process.send && process.connected)
       process.send(workerResults);
   });

@@ -4,7 +4,7 @@ function stringifyForWidnows(str: string) {
   return str.replace(/[\\/:*?"<>|]/g, "").slice(0, 255);
 }
 
-export const metaSource = "Merged by osu!SM — 'osu! Songs Mashup'";
+export const metaSource = "merged_by_osu!SM";
 
 export async function mergeMetadata(
   MergedSong: Beatmap,

@@ -10,6 +10,16 @@ export default (async () => {
   const config = new Jsoning("config.json");
   if (!config.get("localization")) await setLocalization(config); // Ask user to choose localization
 
+  if (!config.get("filters"))
+    config.set("filters", {
+      local: {
+        useFilter: false,
+      },
+      chimu: {
+        useFilter: false,
+      },
+    });
+
   await showMainMenu(config);
 })();
 
