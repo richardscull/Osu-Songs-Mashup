@@ -25,6 +25,9 @@ export function getTwoComfortMaps(paths: string[]): Promise<string[]> {
 
         maps.push(...localMaps);
       }
+
+      if (maps.length === 0) resolve([]);
+
       if (maps.length < numCPUs) {
         getMostComfortMap(maps).then((result) => {
           resolve(result);
@@ -41,11 +44,16 @@ export function getTwoComfortMaps(paths: string[]): Promise<string[]> {
       }
 
       let completedWorkers = 0;
+      const beatmapsFound = [] as string[];
       cluster.on("message", (worker, result) => {
         if (result.length > 0) {
-          resolve(result);
-          for (var id in cluster.workers) {
-            cluster.workers[id]?.kill();
+          beatmapsFound.push(...result);
+
+          if (beatmapsFound.length < 2) {
+            resolve(beatmapsFound);
+            for (var id in cluster.workers) {
+              cluster.workers[id]?.kill();
+            }
           }
         }
 
@@ -67,59 +75,63 @@ if (!cluster.isPrimary) {
   });
 }
 
-/**
- * Gets a random map from all maps, and then
- * will try 10 times to find a suitable couple.
- *
- * If all 10 candidates maps are not suitable,
- * we will try again with another random map as a base.
- */
 async function getMostComfortMap(mapPaths: string[]) {
+  const Jsoning = require("jsoning");
+  const config = new Jsoning("config.json");
+  const filter = config.get("filters")?.local;
+
   const decoder = new BeatmapDecoder();
   const workerResults: string[] = [];
-  let result: boolean = false;
-  for (let i = 0; i < mapPaths.length && !result; i++) {
+
+  let hasResult: boolean = false;
+
+  for (let i = 0; i < mapPaths.length && !hasResult; i++) {
     const rand = Math.floor(Math.random() * mapPaths.length);
     const map = mapPaths[rand];
-    const ruleset = new StandardRuleset();
-
     mapPaths.splice(rand, 1);
 
     await Promise.all([
-      decoder.decodeFromPath(`${map}`, false).then(async (beatmap: Beatmap) => {
-        if (beatmap.mode === 0 && beatmap.metadata.tags[0] !== metaSource) {
-          const mapOfChoice = beatmap;
-          const mapOfChoiceStarRating = ruleset
-            .createDifficultyCalculator(mapOfChoice)
-            .calculate().starRating;
-          for (let i = 1; i < 10 && !result; i++) {
-            const randLocal = Math.floor(Math.random() * mapPaths.length);
-            const mapLocal = mapPaths[randLocal];
-            await decoder
-              .decodeFromPath(mapLocal, false)
-              .then((beatmapLocal: Beatmap) => {
-                if (beatmapLocal.mode === 0) {
-                  const candidateStarRate = ruleset
-                    .createDifficultyCalculator(beatmapLocal)
-                    .calculate().starRating;
-
-                  if (
-                    candidateStarRate > mapOfChoiceStarRating - 1 &&
-                    candidateStarRate < mapOfChoiceStarRating + 1 &&
-                    beatmapLocal.metadata.tags[0] !== metaSource
-                    // Disabled, because we have auto adjusted bpm now
-                    //   beatmapLocal.bpm > mapOfChoice.bpm - 20 &&
-                    //   beatmapLocal.bpm < mapOfChoice.bpm + 20
-                  ) {
-                    workerResults.push(map, mapLocal);
-                    result = true;
-                  }
-                }
-              });
+      decoder
+        .decodeFromPath(`${map}`, false)
+        .then(async (beatmap: Beatmap) => {
+          if (isBeatmapValid(beatmap, filter ?? undefined)) {
+            hasResult = true;
+            workerResults.push(map);
           }
-        }
-      }),
+        })
+        .catch(() => {}),
     ]);
   }
   return workerResults;
+}
+
+function isBeatmapValid(map: Beatmap, filter?: Filter): boolean {
+  if (map.mode !== 0) return false;
+  if (map.metadata.tags[0] === metaSource) return false;
+
+  if (filter) {
+    const ruleset = new StandardRuleset();
+
+    // +20, +30 and etc. are giving filter a bit of a leeway
+    if (filter.useFilter !== true) return false;
+    if (filter.bpm && (map.bpm + 20 < filter.bpm || map.bpm - 20 > filter.bpm))
+      return false;
+
+    if (filter.starRating) {
+      const starRating = ruleset
+        .createDifficultyCalculator(map)
+        .calculate().starRating;
+      if (
+        starRating + 0.5 < filter.starRating ||
+        starRating - 0.5 > filter.starRating
+      )
+        return false;
+    }
+    if (
+      filter.length &&
+      (map.length + 30 < filter.length || map.length - 30 > filter.length)
+    )
+      return false;
+  }
+  return true;
 }

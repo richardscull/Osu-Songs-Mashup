@@ -4,16 +4,13 @@ import printWatermarkAndClear from "../lib/watermark";
 import { getTwoComfortMaps } from "./getTwoComfortMaps";
 import Jsoning from "jsoning";
 import inquirer from "inquirer";
-import {
-  setUserSongsFolder,
-  userChooseMap,
-  userConfirmTwoRandomMaps,
-} from "./prompts";
+import { userChooseMap, userConfirmTwoMaps } from "./prompts";
 import fs from "fs";
+import { setUserSongsFolder } from "../menu/setSettings";
 
 // TODO list:
 // - [x] Refactor code
-// - [ ] Add support of filters
+// - [x] Add support of filters
 // - [x] Add support of user input
 // - [x] Make search faster
 
@@ -45,15 +42,18 @@ export default async function main(config: Jsoning) {
     .then(async (options) => {
       switch (options.option) {
         case localizationMenu.randomMashupFilters:
-          // Has soft filters for now, will add custom ones later
-          getRandomMapsAndMerge(config);
-
+          await getRandomMapsAndMerge(config);
           break;
         case localizationMenu.chooseMashupMaps:
           const firstMap = await userChooseMap(config, 1);
           if (!firstMap) break;
           const secondMap = await userChooseMap(config, 2);
           if (!secondMap) break;
+
+          const maps = await userConfirmTwoMaps(config, {
+            byDifficulty: [firstMap, secondMap],
+          });
+          if (maps.length == 0) return main(config);
 
           require("../merge/main").default(config, firstMap, secondMap);
           break;
@@ -89,8 +89,7 @@ async function getRandomMapsAndMerge(config: Jsoning) {
     return require("../lib/prompt").default(config, main);
   }
 
-  // NOTE: Maybe should use this function for userChooseMap too?
-  const maps = await userConfirmTwoRandomMaps(config, difficulties);
+  const maps = await userConfirmTwoMaps(config, { byPath: difficulties });
   if (maps.length == 0) return main(config);
 
   return require("../merge/main").default(config, maps[0], maps[1]);

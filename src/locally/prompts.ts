@@ -36,33 +36,12 @@ export async function showLocallyExplanation(config: Jsoning) {
     });
 }
 
-export async function setUserSongsFolder(config: Jsoning) {
-  const localization = await getLocalizationJson(config);
-  const localizationSettings = await localization.get("settings");
-
-  printWatermarkAndClear();
-
-  await inquirer
-    .prompt([
-      {
-        name: "Path",
-        type: "input",
-        message: localizationSettings.setOsuPath,
-      },
-    ])
-    .then(async (path) => {
-      if (!fs.existsSync(path.Path)) {
-        console.log(localizationSettings.wrongPath);
-      } else {
-        await config.set("path", path.Path);
-        console.log(localizationSettings.correctPath);
-      }
-    });
-}
-
-export async function userConfirmTwoRandomMaps(
+export async function userConfirmTwoMaps(
   config: Jsoning,
-  maps: string[]
+  maps: {
+    byPath?: string[];
+    byDifficulty?: { path: string; difficulty: Beatmap }[];
+  }
 ) {
   const localization = await getLocalizationJson(config);
   const localizationMenu = await localization.get("menuOptions");
@@ -70,8 +49,19 @@ export async function userConfirmTwoRandomMaps(
   printWatermarkAndClear();
 
   const decoder = new BeatmapDecoder();
-  const firstMap = await decoder.decodeFromPath(maps[0], false);
-  const secondMap = await decoder.decodeFromPath(maps[1], false);
+
+  if (
+    (maps.byPath && maps.byPath.length < 2) ||
+    (maps.byDifficulty && maps.byDifficulty.length < 2)
+  )
+    return [];
+
+  let firstMap = maps.byPath
+    ? await decoder.decodeFromPath(maps.byPath[0])
+    : maps!.byDifficulty![0].difficulty;
+  let secondMap = maps.byPath
+    ? await decoder.decodeFromPath(maps.byPath[1])
+    : maps!.byDifficulty![1].difficulty;
 
   console.log(
     `${localizationMenu.twoRandomMaps}\n\n` +
@@ -93,16 +83,20 @@ export async function userConfirmTwoRandomMaps(
     ])
     .then((options) => {
       if (options.confirm) {
-        return [
-          {
-            path: maps[0].split("/").slice(0, -1).join("/"),
-            difficulty: firstMap,
-          },
-          {
-            path: maps[1].split("/").slice(0, -1).join("/"),
-            difficulty: secondMap,
-          },
-        ];
+        if (maps.byPath) {
+          return [
+            {
+              path: maps.byPath[0].split("/").slice(0, -1).join("/"),
+              difficulty: firstMap,
+            },
+            {
+              path: maps.byPath[1].split("/").slice(0, -1).join("/"),
+              difficulty: secondMap,
+            },
+          ];
+        } else {
+          return maps.byDifficulty ? maps.byDifficulty : [];
+        }
       } else {
         return [];
       }
@@ -115,6 +109,7 @@ export async function userChooseMap(
 ): Promise<{ path: string; difficulty: Beatmap }> {
   const localization = await getLocalizationJson(config);
   const localizationSettings = await localization.get("settings");
+  const localizationSetSettings = await localization.get("setSettings");
 
   printWatermarkAndClear();
 
@@ -125,8 +120,8 @@ export async function userChooseMap(
         type: "input",
         message:
           number == 1
-            ? localizationSettings.setFirstMapPath
-            : localizationSettings.setSecondMapPath,
+            ? localizationSetSettings.setFirstMapPath
+            : localizationSetSettings.setSecondMapPath,
       },
     ])
     .then(async (path) => {
@@ -143,7 +138,7 @@ export async function userChooseMap(
           .filter((file) => file.endsWith(".osu"));
 
         if (difficulties.length === 0) {
-          console.log(localizationSettings.noDifficulties);
+          console.log(localizationSetSettings.noDifficulties);
           return await backToMenu(config, userChooseMap, number);
         } else {
           const decoder = new BeatmapDecoder();
@@ -162,7 +157,7 @@ export async function userChooseMap(
           );
 
           if (difficultyBeatmaps.length === 0) {
-            console.log(localizationSettings.noDifficulties);
+            console.log(localizationSetSettings.noDifficulties);
             return await backToMenu(config, userChooseMap, number);
           } else {
             return {
@@ -184,6 +179,7 @@ async function userChooseDifficulty(
 ): Promise<Beatmap> {
   const localization = await getLocalizationJson(config);
   const localizationSettings = await localization.get("settings");
+  const localizationSetSettings = await localization.get("setSettings");
 
   printWatermarkAndClear();
 
@@ -192,7 +188,7 @@ async function userChooseDifficulty(
       {
         name: "difficulty",
         type: "list",
-        message: localizationSettings.chooseDifficulty,
+        message: localizationSetSettings.chooseDifficulty,
         choices: difficulties.map(
           (difficulty) =>
             `[⭐ ${getBeatmapStarRating(difficulty)}] ${

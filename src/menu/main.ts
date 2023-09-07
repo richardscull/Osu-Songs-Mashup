@@ -29,7 +29,6 @@ export async function showMainMenu(config: Jsoning) {
         choices: [
           localizationMenu.mashupLocally,
           localizationMenu.mashupWithChimuMoe,
-          localizationMenu.mashupWithOsuApi,
           localizationMenu.changeSettings,
           localizationMenu.exit,
         ],
@@ -44,11 +43,6 @@ export async function showMainMenu(config: Jsoning) {
           /* TODO: Add Chimu.moe support */
           console.log(" Currently unsupported ");
           //require("../chimu.moe/main").default(config);
-          break;
-        case localizationMenu.mashupWithOsuApi:
-          /* TODO: Add osu!api support */
-          console.log(" Currently unsupported ");
-          //require("../osu!api/main").default(config);
           break;
         case localizationMenu.changeSettings:
           require("./settings").default(config);
