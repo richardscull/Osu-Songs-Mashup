@@ -4,6 +4,7 @@ import inquirer from "inquirer";
 import { showMainMenu } from "./main";
 import printWatermarkAndClear from "../lib/watermark";
 import { setSettings } from "./setSettings";
+import msToMinAndSec from "../lib/msToMin&Sec";
 
 export default async function toSettings(config: Jsoning) {
   const localization = await getLocalizationJson(config);
@@ -108,11 +109,24 @@ async function showFilters(config: Jsoning, name: "local" | "chimu") {
     console.log(
       `${localizationFilter.filterState}: ${filter.useFilter ? "✅" : "❌"}`
     );
-  if (filter.starRating)
-    console.log(`${localizationFilter.starRating}: ${filter.starRating} ⭐`);
-  if (filter.bpm) console.log(`${localizationFilter.bpm}: ${filter.bpm} BPM`);
-  if (filter.length)
-    console.log(`${localizationFilter.length}: ${filter.length} ⌛`);
+  if (filter.starRatingMin || filter.starRatingMax)
+    console.log(
+      `${localizationFilter.starRating}: ${filter.starRatingMin || "0"} — ${
+        filter.starRatingMax || "∞"
+      } ⭐`
+    );
+  if (filter.bpmMin || filter.bpmMax)
+    console.log(
+      `${localizationFilter.bpm}: ${filter.bpmMin || "0"} — ${
+        filter.bpmMax || "∞"
+      } BPM`
+    );
+  if (filter.lengthMin || filter.lengthMax)
+    console.log(
+      `${localizationFilter.length}: ${
+        msToMinAndSec(filter.lengthMin * 1000) || "0"
+      } — ${msToMinAndSec(filter.lengthMax * 1000) || "∞"} ⌛`
+    );
   if (filter.genre) console.log(`${localizationFilter.genre}: ${filter.genre}`);
 
   console.log(); // New line

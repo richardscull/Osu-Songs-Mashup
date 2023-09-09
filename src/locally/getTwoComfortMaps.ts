@@ -111,30 +111,32 @@ function isBeatmapValid(map: Beatmap, filter?: Filter): boolean {
 
   if (filter) {
     const ruleset = new StandardRuleset();
-
     if (filter.useFilter === false) return true;
 
     // +20, +30 and etc. are giving filter a bit of a leeway
-    if (filter.bpm && (map.bpm + 20 < filter.bpm || map.bpm - 20 > filter.bpm))
-      return false;
+    if (filter.bpmMin || filter.bpmMax) {
+      if (filter.bpmMin && map.bpm + 20 < filter.bpmMin) return false;
+      if (filter.bpmMax && map.bpm - 20 > filter.bpmMax) return false;
+    }
 
-    if (filter.starRating) {
+    if (filter.starRatingMin || filter.starRatingMax) {
       const starRating = ruleset
         .createDifficultyCalculator(map)
         .calculate().starRating;
-      if (
-        starRating + 0.5 < filter.starRating ||
-        starRating - 0.5 > filter.starRating
-      )
+
+      if (filter.starRatingMin && starRating + 0.5 < filter.starRatingMin)
+        return false;
+      if (filter.starRatingMax && starRating - 0.5 > filter.starRatingMax)
         return false;
     }
 
-    if (
-      filter.length &&
-      (map.length / 1000 + 30 < filter.length ||
-        map.length / 1000 - 30 > filter.length)
-    )
-      return false;
+    if (filter.lengthMin || filter.lengthMax) {
+      if (filter.lengthMin && map.length / 1000 + 30 < filter.lengthMin)
+        return false;
+      if (filter.lengthMax && map.length / 1000 - 30 > filter.lengthMax)
+        return false;
+    }
   }
+
   return true;
 }

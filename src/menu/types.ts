@@ -1,7 +1,10 @@
 interface Filter {
   useFilter: boolean;
-  starRating: number;
-  bpm: number;
-  length: number;
+  starRatingMin: number;
+  starRatingMax: number;
+  bpmMin: number;
+  bpmMax: number;
+  lengthMin: number;
+  lengthMax: number;
   query?: string;
 }

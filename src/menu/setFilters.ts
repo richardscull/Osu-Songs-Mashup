@@ -2,6 +2,7 @@ import Jsoning from "jsoning";
 import getLocalizationJson from "../lib/localization/main";
 import printWatermarkAndClear from "../lib/watermark";
 import inquirer from "inquirer";
+import msToMinAndSec from "../lib/msToMin&Sec";
 
 export async function setFilters(config: Jsoning, name: "local" | "chimu") {
   const localization = await getLocalizationJson(config);
@@ -26,9 +27,20 @@ export async function setFilters(config: Jsoning, name: "local" | "chimu") {
     if (name === "local")
       console.log(localizationFilter.localFilterLeeway + "\n");
 
+    const isMultipleVal = choice !== "query";
+    const isLength = choice === "length";
+
     console.log(
       `${localizationFilter[choice]}: ${
-        filter[choice] || localizationFilter.notSet
+        isMultipleVal
+          ? isLength
+            ? `${toTimeIfNumber(filter[`${choice}Min`]) || "0"} — ${
+                toTimeIfNumber(filter[`${choice}Max`]) || "∞"
+              }`
+            : `${filter[`${choice}Min`] || "0"} — ${
+                filter[`${choice}Max`] || "∞"
+              }` || localizationFilter.notSet
+          : filter[choice] || localizationFilter.notSet
       }`
     );
 
@@ -36,6 +48,10 @@ export async function setFilters(config: Jsoning, name: "local" | "chimu") {
   }
 
   require("./settings").default(config);
+}
+
+function toTimeIfNumber(value: number) {
+  return isNaN(value) ? undefined : msToMinAndSec(value * 1000);
 }
 
 async function changeSettingInput(
@@ -46,6 +62,7 @@ async function changeSettingInput(
   const localization = await getLocalizationJson(config);
   const localizationFilter = await localization.get("filter");
   const localizationSettings = await localization.get("settings");
+  const localizationSetSettings = await localization.get("setSettings");
 
   const filters = config.get("filters") ? config.get("filters") : {};
   const filter = filters[name] ? filters[name] : {};
@@ -60,26 +77,48 @@ async function changeSettingInput(
     ])
     .then(async (options) => {
       if (options.changeFilter) {
-        await inquirer
-          .prompt([
-            {
-              name: "value",
-              type: "input",
-              message: localizationFilter.enterNewValue,
-            },
-          ])
-          .then((options: any) => {
-            if (attr !== "query" && isNaN(options.value)) {
-              filter[attr] = undefined;
-            } else {
-              filter[attr] = options.value || undefined;
-            }
-
-            config.set("filters", {
-              ...filters,
-              [name]: filter,
-            });
-          });
+        if (attr === "query") {
+          await enterValue(false);
+        } else {
+          if (attr === "length")
+            console.log("\n" + localizationSetSettings.writeValInSeconds);
+          await enterValue(true);
+        }
       }
     });
+
+  async function enterValue(multipleVal: boolean) {
+    let timesToEnter = multipleVal ? 2 : 1;
+    for (timesToEnter; timesToEnter > 0; timesToEnter--) {
+      const enterNumVal = `${localizationSettings.change} ${
+        timesToEnter == 2 ? "1" : "2"
+      } ${localizationSettings.newValue}`;
+
+      await inquirer
+        .prompt([
+          {
+            name: "value",
+            type: "input",
+            message: multipleVal
+              ? enterNumVal
+              : localizationFilter.enterNewValue,
+          },
+        ])
+        .then((options: any) => {
+          if (attr !== "query" && isNaN(options.value)) {
+            filter[attr] = undefined;
+          } else if (attr !== "query" && multipleVal) {
+            filter[`${attr}${timesToEnter == 2 ? "Min" : "Max"}`] =
+              options.value || undefined;
+          } else {
+            filter[attr] = options.value || undefined;
+          }
+
+          config.set("filters", {
+            ...filters,
+            [name]: filter,
+          });
+        });
+    }
+  }
 }
