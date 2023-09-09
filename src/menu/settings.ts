@@ -53,6 +53,10 @@ export default async function toSettings(config: Jsoning) {
     });
 }
 
+function toTimeIfNumber(value: number) {
+  return isNaN(value) ? undefined : msToMinAndSec(value * 1000);
+}
+
 async function showCurrentSettings(config: Jsoning) {
   const localization = await getLocalizationJson(config);
   const localizationSettings = await localization.get("settings");
@@ -124,8 +128,8 @@ async function showFilters(config: Jsoning, name: "local" | "chimu") {
   if (filter.lengthMin || filter.lengthMax)
     console.log(
       `${localizationFilter.length}: ${
-        msToMinAndSec(filter.lengthMin * 1000) || "0"
-      } — ${msToMinAndSec(filter.lengthMax * 1000) || "∞"} ⌛`
+        toTimeIfNumber(filter.lengthMin) || "0"
+      } — ${toTimeIfNumber(filter.lengthMax) || "∞"} ⌛`
     );
   if (filter.genre) console.log(`${localizationFilter.genre}: ${filter.genre}`);
 

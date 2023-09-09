@@ -64,9 +64,6 @@ async function changeSettingInput(
   const localizationSettings = await localization.get("settings");
   const localizationSetSettings = await localization.get("setSettings");
 
-  const filters = config.get("filters") ? config.get("filters") : {};
-  const filter = filters[name] ? filters[name] : {};
-
   await inquirer
     .prompt([
       {
@@ -88,6 +85,9 @@ async function changeSettingInput(
     });
 
   async function enterValue(multipleVal: boolean) {
+    const filters = config.get("filters") ? config.get("filters") : {};
+    const filter = filters[name] ? filters[name] : {};
+
     let timesToEnter = multipleVal ? 2 : 1;
     for (timesToEnter; timesToEnter > 0; timesToEnter--) {
       const enterNumVal = `${localizationSettings.change} ${
@@ -113,12 +113,12 @@ async function changeSettingInput(
           } else {
             filter[attr] = options.value || undefined;
           }
-
-          config.set("filters", {
-            ...filters,
-            [name]: filter,
-          });
         });
+
+      config.set("filters", {
+        ...filters,
+        [name]: filter,
+      });
     }
   }
 }
