@@ -3,7 +3,7 @@
 <h1>📖 osu! Songs Mashup </h1>
 </div>
 
-**"osu! Songs Mashup"** is a CLI tool that combines two beatmaps from the popular game osu! into a single harmonious experience, offering both offline and online compatibility, with such as Chimu.moe.
+**"osu! Songs Mashup"** is a CLI tool that combines two beatmaps from the popular game osu! into a single harmonious experience using your songs library.
 
 With its user-friendly filter functionality, you can create your mashups to match your skill level and musical tastes.
 

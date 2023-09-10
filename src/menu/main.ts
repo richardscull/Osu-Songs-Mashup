@@ -50,9 +50,7 @@ export async function showMainMenu(config: Jsoning) {
           showLocallyExplanation(config);
           break;
         case localizationMenu.mashupWithChimuMoe:
-          /* TODO: Add Chimu.moe support */
-          console.log(" Currently unsupported ");
-          //require("../chimu.moe/main").default(config);
+          require("../chimu!api/main").default(config);
           break;
         case localizationMenu.changeSettings:
           require("./settings").default(config);

@@ -2,7 +2,7 @@ import Jsoning from "jsoning";
 import getLocalizationJson from "../lib/localization/main";
 import printWatermarkAndClear from "../lib/watermark";
 import inquirer from "inquirer";
-import msToMinAndSec from "../lib/msToMin&Sec";
+import msToMinAndSec, { toTimeIfNumber } from "../lib/msToMin&Sec";
 
 export async function setFilters(config: Jsoning, name: "local" | "chimu") {
   const localization = await getLocalizationJson(config);
@@ -48,10 +48,6 @@ export async function setFilters(config: Jsoning, name: "local" | "chimu") {
   }
 
   require("./settings").default(config);
-}
-
-function toTimeIfNumber(value: number) {
-  return isNaN(value) ? undefined : msToMinAndSec(value * 1000);
 }
 
 async function changeSettingInput(

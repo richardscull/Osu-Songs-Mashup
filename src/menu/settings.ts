@@ -4,7 +4,7 @@ import inquirer from "inquirer";
 import { showMainMenu } from "./main";
 import printWatermarkAndClear from "../lib/watermark";
 import { setSettings } from "./setSettings";
-import msToMinAndSec from "../lib/msToMin&Sec";
+import msToMinAndSec, { toTimeIfNumber } from "../lib/msToMin&Sec";
 
 export default async function toSettings(config: Jsoning) {
   const localization = await getLocalizationJson(config);
@@ -51,10 +51,6 @@ export default async function toSettings(config: Jsoning) {
           break;
       }
     });
-}
-
-function toTimeIfNumber(value: number) {
-  return isNaN(value) ? undefined : msToMinAndSec(value * 1000);
 }
 
 async function showCurrentSettings(config: Jsoning) {

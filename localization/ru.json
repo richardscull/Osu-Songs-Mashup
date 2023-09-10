@@ -41,7 +41,8 @@
     "correctPath": "Путь успешно установлен!",
     "filters": "Фильтры",
     "noFilters": "Фильтры не настроены.",
-    "osuPath": "Путь к osu! песням"
+    "osuPath": "Путь к osu! песням",
+    "unsupported": "В разработке..."
   },
   "setSettings": {
     "setOsuPath": "Введите ваш путь к osu! Songs директории. Пример: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\",

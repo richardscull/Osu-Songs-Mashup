@@ -41,7 +41,8 @@
     "correctPath": "Path changed successfully!",
     "filters": "Filters",
     "noFilters": "Filters are not set.",
-    "osuPath": "Path to osu! songs"
+    "osuPath": "Path to osu! songs",
+    "unsupported": "Currently in development."
   },
   "setSettings": {
     "setOsuPath": "Set your osu! Songs path. Example: C:\\Users\\User\\AppData\\Local\\osu!\\Songs\\",
