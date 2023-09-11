@@ -21,7 +21,7 @@ export async function MergeAudioAndExport(
     `${secondSong.path}/${secondSong.difficulty.general.audioFilename}`,
     "Temp/SecondPart.mp3",
     {
-      start: timecodes.startOfSecondHalf / 1000, // +1s to avoid unsync audio after fading
+      start: timecodes.startOfSecondHalf / 1000, 
     }
   );
 
