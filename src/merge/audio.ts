@@ -2,7 +2,6 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import ffprobe from "@ffprobe-installer/ffprobe";
 import { Difficulty } from "../locally/types";
-const MP3Cutter = require("mp3-cutter");
 
 export async function MergeAudioAndExport(
   firstSong: Difficulty,
@@ -10,16 +9,21 @@ export async function MergeAudioAndExport(
   timecodes: { endOfFirstHalf: number; startOfSecondHalf: number },
   pathToExport: string
 ) {
-  await MP3Cutter.cut({
-    src: `${firstSong.path}/${firstSong.difficulty.general.audioFilename}`,
-    target: "Temp/FirstPart.mp3",
-    end: timecodes.endOfFirstHalf / 1000 + 1, // +1s to avoid unsync audio after fading
-  });
-  await MP3Cutter.cut({
-    src: `${secondSong.path}/${secondSong.difficulty.general.audioFilename}`,
-    target: "Temp/SecondPart.mp3",
-    start: timecodes.startOfSecondHalf / 1000,
-  });
+  await cutMP3Audio(
+    `${firstSong.path}/${firstSong.difficulty.general.audioFilename}`,
+    "Temp/FirstPart.mp3",
+    {
+      end: timecodes.endOfFirstHalf / 1000 + 1, // +1s to avoid unsync audio after fading
+    }
+  );
+
+  await cutMP3Audio(
+    `${secondSong.path}/${secondSong.difficulty.general.audioFilename}`,
+    "Temp/SecondPart.mp3",
+    {
+      start: timecodes.startOfSecondHalf / 1000, // +1s to avoid unsync audio after fading
+    }
+  );
 
   ffmpeg.setFfmpegPath(ffmpegInstaller.path);
   ffmpeg.setFfprobePath(ffprobe.path);
@@ -44,6 +48,35 @@ export async function MergeAudioAndExport(
       .on("end", function () {
         resolve(undefined);
       })
+      .run();
+  });
+}
+
+function cutMP3Audio(
+  path: string,
+  output: string,
+  time: {
+    start?: number;
+    end?: number;
+  }
+) {
+  return new Promise((resolve, reject) => {
+    ffmpeg()
+      .input(path)
+      .outputOptions(
+        time.start !== undefined
+          ? `-ss ${time.start || 0}`
+          : `-t ${time.end || 0}`
+      )
+      .output(output)
+      .on("error", function (err) {
+        console.log("An error occurred during cutting: " + err.message);
+        reject(err);
+      })
+      .on("end", function () {
+        resolve(undefined);
+      })
+
       .run();
   });
 }

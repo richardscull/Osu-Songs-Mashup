@@ -22,7 +22,6 @@
     "fluent-ffmpeg": "^2.1.2",
     "inquirer": "^8.2.6",
     "jsoning": "^0.13.23",
-    "mp3-cutter": "^1.0.6",
     "open": "^8.4.0",
     "osu-classes": "^3.0.0",
     "osu-parsers": "^4.1.3",

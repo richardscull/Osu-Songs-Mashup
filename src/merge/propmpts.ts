@@ -2,6 +2,7 @@ import Jsoning from "jsoning";
 import getLocalizationJson from "../lib/localization/main";
 import inquirer from "inquirer";
 import open from "open";
+import fs from "fs";
 
 export async function openOsz(config: Jsoning, oszPath: string) {
   const localization = await getLocalizationJson(config);
@@ -17,7 +18,8 @@ export async function openOsz(config: Jsoning, oszPath: string) {
     ])
     .then((options) => {
       if (options.backToMenu) {
-        open(oszPath);
+        fs.copyFileSync(oszPath, `${oszPath}-exp.osz`);
+        open(`${oszPath}-exp.osz`);
       }
     });
 }
