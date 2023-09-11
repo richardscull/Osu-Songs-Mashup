@@ -9,7 +9,7 @@
     "buildAndStart": "tsc && node build/index.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/fluent-ffmpeg": "^2.1.21",
     "@types/inquirer": "^9.0.3",
