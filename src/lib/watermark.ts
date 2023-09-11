@@ -7,6 +7,7 @@ export default async function printWatermarkAndClear(firstRun?: boolean) {
     "              ⡀⠄⠻⣷⡘⢿⣿⣿⡿⢣⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣜⢿⣿⣿⡿⢃⣾⠟⢁⠈",
     "              ⢃⢻⣶⣬⣿⣶⣬⣥⣶⣿⣿⣿⣿⣿⢿⣿⣿⣿⣿⣿⣷⣶⣶⣾⣿⣷⣾⣾⢣",
     "                osu!SM - osu! Songs Mashup",
+    `                Version: ${process.env.npm_package_version}`,
     "",
   ];
 

@@ -1,7 +1,7 @@
 {
-  "name": "osucreatemashupsong",
-  "version": "1.0.0",
-  "description": "",
+  "name": "osu-songs-mashup",
+  "version": "1.0.2",
+  "description": "CLI tool that combines two osu! beatmaps",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
