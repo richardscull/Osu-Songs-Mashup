@@ -115,10 +115,6 @@ export default async function main(
     `./${MergedSong.metadata.title}.osz`
   );
 
-  // NOTE: Doesn't work. Need to find another way to do it
-  // Deny modify permissions for .osz file (to prevent osu! from deleting it)
-  // fs.chmodSync(`./${MergedSong.metadata.title}.osz`, 0o444);
-
   // Delete Temp folder
   fs.rmSync("./Temp", { recursive: true });
 
@@ -165,7 +161,8 @@ export default async function main(
 
     const mapsOffset =
       lastTimingPoint.startTime < 0
-        ? timeForFullRythmCycle - lastTimingPoint.startTime
+        ? timeForFullRythmCycle +
+          (timeForFullRythmCycle + lastTimingPoint.startTime)
         : lastTimingPoint.startTime;
 
     let newOffset = mergeOffset + mapsOffset;
