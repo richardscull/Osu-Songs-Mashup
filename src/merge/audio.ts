@@ -9,6 +9,9 @@ export async function MergeAudioAndExport(
   timecodes: { endOfFirstHalf: number; startOfSecondHalf: number },
   pathToExport: string
 ) {
+  ffmpeg.setFfmpegPath(ffmpegInstaller.path);
+  ffmpeg.setFfprobePath(ffprobe.path);
+
   await cutMP3Audio(
     `${firstSong.path}/${firstSong.difficulty.general.audioFilename}`,
     "Temp/FirstPart.mp3",
@@ -21,12 +24,9 @@ export async function MergeAudioAndExport(
     `${secondSong.path}/${secondSong.difficulty.general.audioFilename}`,
     "Temp/SecondPart.mp3",
     {
-      start: timecodes.startOfSecondHalf / 1000, 
+      start: timecodes.startOfSecondHalf / 1000,
     }
   );
-
-  ffmpeg.setFfmpegPath(ffmpegInstaller.path);
-  ffmpeg.setFfprobePath(ffprobe.path);
 
   return new Promise((resolve, reject) => {
     ffmpeg()
