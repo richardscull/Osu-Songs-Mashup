@@ -1,6 +1,6 @@
 {
   "name": "osu-songs-mashup",
-  "version": "1.0.2",
+  "version": "1.0.2.1",
   "description": "CLI tool that combines two osu! beatmaps",
   "main": "index.js",
   "scripts": {

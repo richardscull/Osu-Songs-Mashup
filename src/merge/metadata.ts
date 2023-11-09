@@ -12,7 +12,7 @@ export async function mergeMetadata(
   SecondSong: Beatmap
 ) {
   MergedSong.metadata.title = stringifyForWidnows(
-    FirstSong.metadata.title + " VS. " + SecondSong.metadata.title
+    FirstSong.metadata.title + " & " + SecondSong.metadata.title
   );
 
   MergedSong.metadata.title = MergedSong.metadata.title.endsWith(".")
@@ -20,18 +20,16 @@ export async function mergeMetadata(
     : MergedSong.metadata.title;
 
   MergedSong.metadata.artist = stringifyForWidnows(
-    FirstSong.metadata.artist + " VS. " + SecondSong.metadata.artist
+    FirstSong.metadata.artist + " & " + SecondSong.metadata.artist
   );
 
   MergedSong.metadata.tags = [];
   MergedSong.metadata.tags[0] = metaSource;
 
-  MergedSong.metadata.creator = stringifyForWidnows(
-    FirstSong.metadata.creator + " VS. " + SecondSong.metadata.creator
-  );
+  MergedSong.metadata.creator = stringifyForWidnows("osu! Songs Mashup");
 
   MergedSong.metadata.version = stringifyForWidnows(
-    FirstSong.metadata.version + " VS. " + SecondSong.metadata.version
+    FirstSong.metadata.version + " & " + SecondSong.metadata.version
   );
 
   MergedSong.general.previewTime = 0;
