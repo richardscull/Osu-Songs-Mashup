@@ -95,7 +95,7 @@ export default async function main(
 
   console.log(localizationMerging.background);
 
-  // Merge background images (for now it's just copy first map background)
+  // Merge background images
   await MergeBackgroundsAndExport(
     FirstSong,
     SecondSong,
